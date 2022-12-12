@@ -1,8 +1,20 @@
 #include <openssl/evp.h>
 #include <string.h>
 #include <stdio.h>
-#include "structs.c"
+#include "structs.h"
 
+int compareStrings(char* str1, char* str2){
+    int counter;
+    if(sizeof(str1) < sizeof(str2)){
+        counter = sizeof(str1);
+    }else{
+         counter = sizeof(str2);
+    }
+    for(int i=0;i<counter;i++){
+        if(str1[i] != str2[i]) return 0;
+    }
+    return 1;
+}
 void removeSpaces(char *str)
 {
     // To keep track of non-space character count
@@ -11,7 +23,7 @@ void removeSpaces(char *str)
     // Traverse the given string. If current character
     // is not space, then place it at index 'count++'
     for (int i = 0; str[i]; i++)
-        if (str[i] != '\t' && str[i] != ' ')
+        if (str[i] != '\t' && str[i] != ' ' && str[i]!='\n')
             str[count++] = str[i]; // here count is
                                    // incremented
     str[count] = '\0';
