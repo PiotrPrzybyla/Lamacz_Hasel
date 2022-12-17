@@ -28,11 +28,11 @@ int main(){
 	
 	// printf("%s", passwords[0]);
 	rc1 = pthread_create(&thread1, NULL, oneWord0, (void *)&args);
-	// rc2 = pthread_create(&thread2, NULL, oneWord1, NULL);
-	// rc3 = pthread_create(&thread3, NULL, oneWord2, NULL);
+	rc2 = pthread_create(&thread2, NULL, oneWord1, (void *)&args);
+	rc3 = pthread_create(&thread3, NULL, oneWord2, (void *)&args);
 	pthread_join(thread1, NULL);
-	// pthread_join(thread2, NULL);
-	// pthread_join(thread3, NULL);
+	pthread_join(thread2, NULL);
+	pthread_join(thread3, NULL);
 	for(int i = 0; i< (*numberOfPasswords) ; i++){
 		printf("%s\n", passwords[i]);
 	}
