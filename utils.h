@@ -82,36 +82,51 @@ void bytes2md5(const char *data, int len, char *md5buf) {
 	}
 }
 
-void checkPassword( char* password, int* numberOfPasswords){
+void checkPassword( char* password){
     char md5[33]; // 32 characters + null terminator
-    
     removeSpaces(password);
-	pthread_mutex_lock(&mutex);
+	//    pthread_mutex_lock(&mutex);
+
     for(int k = 0; k<passwordToBreakLength; k++){
         // printf("%d\n",passwordToBreakLength);
         // for(int i = 0; i<passwordToBreakLength; i++){
         //      printf("%s\n",passwordsToBreak[i]);
         // }
+        pthread_mutex_lock(&mutex);
+       
 		bytes2md5(password, strlen(password), md5);
-        
+       
 		struct User user;
         // printf("%s\n",passwordsToBreak[k] );
+        
 		separateStringBySpace(passwordsToBreak[k], &user);
         // printf("%s\n",passwordsToBreak[k] );
         // 
         // printf("%s\n",user.hashedPassword );
+          
 		if(compareStrings(md5, user.hashedPassword)){
+            // pthread_mutex_lock(&mutex);
+            (numberOfPasswords)++;
+			passwords = realloc(passwords, (numberOfPasswords) * sizeof(char*));
+             
+            passwords[(numberOfPasswords) -1] = strdup(password);
+            mails = realloc(mails, (numberOfPasswords) * sizeof(char*));
+            mails[(numberOfPasswords) -1] = strdup(user.mail);
+            newestPassword = malloc(sizeof(char*));
+            newestPassword = strdup(password);
             
-            // printf("dupa");
-            (*numberOfPasswords)++;
-			passwords = realloc(passwords, (*numberOfPasswords) * sizeof(char*));
-            passwords[(*numberOfPasswords) -1] = strdup(password);
-            mails = realloc(mails, (*numberOfPasswords) * sizeof(char*));
-            mails[(*numberOfPasswords) -1] = strdup(user.mail);
+            pthread_cond_signal(&cond);
+            // pthread_mutex_unlock(&mutex);
+            
+           
             // printf("%s\n", passwords[(*numberOfPasswords) -1]);
+            
       }
+      pthread_mutex_unlock(&mutex);
+    //   pthread_mutex_unlock(&mutex);
     }
-    pthread_mutex_unlock(&mutex);
+    //   pthread_mutex_unlock(&mutex);
+   
 }
 void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
     dictionaryLength = 0;
