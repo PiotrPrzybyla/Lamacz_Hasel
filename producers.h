@@ -46,16 +46,18 @@ void oneWord0(char *dictionaryFileName, char *passwordsFileName){
     FILE *dictionaryFile = fopen(dictionaryFileName, "r");
   while (fgets(line, sizeof(line), dictionaryFile))
   {
-    char* newLine = malloc(256);
+    char *newLine = malloc(256);
     char *str = malloc(1);
+    newLine = line;
     sprintf(str, "%d", counter);
-    strcat(line, str);
+     //prefix
+  
+   strcat( str, line);
+    removeSpaces(str);
     
-    removeSpaces(line);
-    strcat(line, "\n");
-    
-    
-	bytes2md5(line, strlen(line), md5);
+    strcat(str, "\n");
+    // printf("%s", str);
+	bytes2md5(str, strlen(str), md5);
 
 	FILE *passwordFile = fopen(passwordsFileName, "r");
 
@@ -65,12 +67,39 @@ void oneWord0(char *dictionaryFileName, char *passwordsFileName){
 		separateStringBySpace(passwordLine, &user);
        
 		if(compareStrings(md5, user.hashedPassword)){
+			printf("Password for %s is %s\n", user.mail, str);
+      }
+    }
+    fclose(passwordFile);
+    free(str);
+    //postfix
+    str = malloc(1);
+    sprintf(str, "%d", counter);
+    strcat(line, str);
+    
+    removeSpaces(line);
+    strcat(line, "\n");
+
+	bytes2md5(line, strlen(line), md5);
+
+
+	passwordFile = fopen(passwordsFileName, "r");
+
+    while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
+		
+		struct User user;
+		separateStringBySpace(passwordLine, &user);
+       
+		if(compareStrings(md5, user.hashedPassword)){
 			printf("Password for %s is %s\n", user.mail, line);
-		}
-}
-	fclose(passwordFile);
+      }
+    }
+	free(str);
+  fclose(passwordFile);
+ 
 	}
      counter++;
+     
        
     }
 
