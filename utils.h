@@ -72,7 +72,6 @@ void checkPassword( char* password, char* passwordsFileName){
   char md5[33]; // 32 characters + null terminator
     removeSpaces(password);
     
-    strcat(password, "\n");
     // printf("%s", str);
 	bytes2md5(password, strlen(password), md5);
 
