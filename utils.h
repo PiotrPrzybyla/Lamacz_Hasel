@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "structs.h"
+#include "globals.h"
 
 int compareStrings(char* str1, char* str2){
     int counter;
@@ -67,23 +68,24 @@ void bytes2md5(const char *data, int len, char *md5buf) {
 	}
 }
 
-void checkPassword( char* password, char* passwordsFileName){
+void checkPassword( char* password, char* passwordsFileName,int* numberOfPasswords){
       char passwordLine[256];
   char md5[33]; // 32 characters + null terminator
     removeSpaces(password);
     
-    // printf("%s", str);
+    
 	bytes2md5(password, strlen(password), md5);
-
 	FILE *passwordFile = fopen(passwordsFileName, "r");
-
     while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
 		
 		struct User user;
 		separateStringBySpace(passwordLine, &user);
-       
 		if(compareStrings(md5, user.hashedPassword)){
-			printf("Password for %s is %s\n", user.mail, password);
+            pthread_mutex_lock(&mutex);
+            (*numberOfPasswords)++;
+			passwords = realloc(passwords, (*numberOfPasswords) * sizeof(char*));
+            passwords[(*numberOfPasswords) -1] = strdup(password);
+            pthread_mutex_unlock(&mutex);	
       }
     }
     fclose(passwordFile);
