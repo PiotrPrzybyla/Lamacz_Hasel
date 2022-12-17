@@ -90,3 +90,30 @@ void checkPassword( char* password, char* passwordsFileName,int* numberOfPasswor
     }
     fclose(passwordFile);
 }
+void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
+    dictionaryLength = 0;
+    passwordToBreakLength = 0;
+    FILE *dictionaryFile = fopen(dictionaryFileName, "r");
+    if (dictionaryFile == NULL)
+  {
+    printf("Failed to open the file: %s\n", dictionaryFileName);
+    return;
+  }
+  // Read the file line by line
+  char *line = malloc(32);
+  char passwordLine[256];
+
+  while (fgets(line, sizeof(line), dictionaryFile))
+  { 
+    dictionaryLength++;
+    dictionary = realloc(dictionary, dictionaryLength * sizeof(char*));
+    removeSpaces(line);
+    dictionary[dictionaryLength -1] = strdup(line);
+}
+    FILE *passwordFile = fopen(passwordsFileName, "r");
+ while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
+    passwordToBreakLength++;
+    passwordsToBreak = realloc(passwordsToBreak, passwordToBreakLength * sizeof(char**));
+    passwordsToBreak[passwordToBreakLength -1] = strdup(passwordLine);
+ }
+}

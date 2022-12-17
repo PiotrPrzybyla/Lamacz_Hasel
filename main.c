@@ -15,9 +15,10 @@ int main(){
 	pthread_t thread1, thread2, thread3;
 	int rc1,rc2,rc3;
  pthread_mutex_init(&mutex, NULL);
-	args.dictionaryFileName = "tests/test-dict-mini.txt";
-	args.passwordsFileName = "tests/test-data1-local.txt";
+	char * dictionaryFileName = "tests/test-dict-mini.txt";
+	char* passwordsFileName = "tests/test-data1-local.txt";
 	args.numberOfPasswords = numberOfPasswords;
+	readFromFiles(dictionaryFileName, passwordsFileName);
 	// oneWord0(passwords, numberOfPasswords);
 	// printf("%s", passwords[0]);
 	rc1 = pthread_create(&thread1, NULL, oneWord0, (void *)&args);
