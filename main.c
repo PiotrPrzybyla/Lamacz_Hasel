@@ -18,8 +18,14 @@ int main(){
 	char * dictionaryFileName = "tests/test-dict-mini.txt";
 	char* passwordsFileName = "tests/test-data1-local.txt";
 	args.numberOfPasswords = numberOfPasswords;
+	    pthread_mutex_lock(&mutex);
+
 	readFromFiles(dictionaryFileName, passwordsFileName);
-	// oneWord0(passwords, numberOfPasswords);
+	// for(int i = 0; i< (passwordToBreakLength) ; i++){
+	// 	printf("%s\n", passwordsToBreak[i]);
+	// }
+	    pthread_mutex_unlock(&mutex);
+	
 	// printf("%s", passwords[0]);
 	rc1 = pthread_create(&thread1, NULL, oneWord0, (void *)&args);
 	// rc2 = pthread_create(&thread2, NULL, oneWord1, NULL);
@@ -33,5 +39,7 @@ int main(){
 	pthread_mutex_destroy(&mutex);
 	free(numberOfPasswords);
 	free(passwords);
+	free(dictionary);
+	free(passwordsToBreak);
     return 0;
 }

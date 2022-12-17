@@ -30,29 +30,43 @@ void removeSpaces(char *str)
     str[count] = '\0';
 }
 
-void separateStringBySpace(char* input, struct User* user)
+void separateStringBySpace(char* inputt, struct User* user)
 {
   // Use strtok to split the input string by space characters
+  char* input = malloc(1024);
+  strncpy(input, inputt, 1024);
+//   printf("%s\n", input);
   char* token = strtok(input, " ");
+//   printf("%s\n", token);
+  
   int counter = 0;
   while (token != NULL)
   {
     // Print the current token to the console
     // printf("%s\n", token);
 	removeSpaces(token);
+	// printf("%s\n", token);
+    // printf("%d\n", counter);
 	if(counter == 1){
 		user->hashedPassword = token;
-	} 
-	if(counter == 2){
-		user->mail = token;
+        // printf("%s\n", user->hashedPassword);
 	}
 	if(counter == 3){ 
 		user->username = token;
 	}
+    if(counter == 2){
+		user->mail = token;
+        
+	} 
     // Get the next token
     token = strtok(NULL, " ");
 	counter++;
+    // 
   }
+//   printf("%s\n", user->hashedPassword);
+//   printf("%s\n\n", input);
+//   free(input);
+  
 }
 void bytes2md5(const char *data, int len, char *md5buf) {
 	EVP_MD_CTX *mdctx = EVP_MD_CTX_new();
@@ -68,27 +82,36 @@ void bytes2md5(const char *data, int len, char *md5buf) {
 	}
 }
 
-void checkPassword( char* password, char* passwordsFileName,int* numberOfPasswords){
-      char passwordLine[256];
-  char md5[33]; // 32 characters + null terminator
+void checkPassword( char* password, int* numberOfPasswords){
+    char md5[33]; // 32 characters + null terminator
+    
     removeSpaces(password);
-    
-    
-	bytes2md5(password, strlen(password), md5);
-	FILE *passwordFile = fopen(passwordsFileName, "r");
-    while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
-		
+	pthread_mutex_lock(&mutex);
+    for(int k = 0; k<passwordToBreakLength; k++){
+        // printf("%d\n",passwordToBreakLength);
+        // for(int i = 0; i<passwordToBreakLength; i++){
+        //      printf("%s\n",passwordsToBreak[i]);
+        // }
+		bytes2md5(password, strlen(password), md5);
+        
 		struct User user;
-		separateStringBySpace(passwordLine, &user);
+        // printf("%s\n",passwordsToBreak[k] );
+		separateStringBySpace(passwordsToBreak[k], &user);
+        // printf("%s\n",passwordsToBreak[k] );
+        // 
+        // printf("%s\n",user.hashedPassword );
 		if(compareStrings(md5, user.hashedPassword)){
-            pthread_mutex_lock(&mutex);
+            
+            // printf("dupa");
             (*numberOfPasswords)++;
 			passwords = realloc(passwords, (*numberOfPasswords) * sizeof(char*));
             passwords[(*numberOfPasswords) -1] = strdup(password);
-            pthread_mutex_unlock(&mutex);	
+            mails = realloc(mails, (*numberOfPasswords) * sizeof(char*));
+            mails[(*numberOfPasswords) -1] = strdup(user.mail);
+            // printf("%s\n", passwords[(*numberOfPasswords) -1]);
       }
     }
-    fclose(passwordFile);
+    pthread_mutex_unlock(&mutex);
 }
 void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
     dictionaryLength = 0;
@@ -113,7 +136,10 @@ void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
     FILE *passwordFile = fopen(passwordsFileName, "r");
  while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
     passwordToBreakLength++;
-    passwordsToBreak = realloc(passwordsToBreak, passwordToBreakLength * sizeof(char**));
+    passwordsToBreak = realloc(passwordsToBreak, passwordToBreakLength * sizeof(char*));
     passwordsToBreak[passwordToBreakLength -1] = strdup(passwordLine);
+   
  }
+ fclose(dictionaryFile);
+ fclose(passwordFile);
 }

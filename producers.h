@@ -7,75 +7,61 @@
 //małe litery
 void *oneWord0(void *arg){
  struct thread_args *args = (struct thread_args *)arg;
- FILE *dictionaryFile = fopen(args->dictionaryFileName, "r");
-  if (dictionaryFile == NULL)
-  {
-    printf("Failed to open the file: %s\n", args->dictionaryFileName);
-    return;
-  }
-  // Read the file line by line
-  char *line = malloc(256);
 //check without prefixes
-  while (fgets(line, sizeof(line), dictionaryFile))
-  { 
-    
-	  checkPassword(line, args->passwordsFileName, args->numberOfPasswords);
-    
+for(int i=0;i<dictionaryLength; i++){
+     checkPassword(dictionary[i], args->numberOfPasswords);
 	}
 
 //check with numbers
-  int counter = 0;
-  while(counter < 100){
-  FILE *dictionaryFile = fopen(args->dictionaryFileName, "r");
-  while (fgets(line, sizeof(line), dictionaryFile))
-  {
-    //prefix
-    char *prefix = malloc(256);
-    char *postfix = malloc(256);
-    sprintf(prefix, "%d", counter);
-    strcat( prefix, line);
-	  checkPassword(prefix, args->passwordsFileName, args->numberOfPasswords);
-    free(prefix);
-    free(postfix);
+  // int counter = 0;
+  // while(0){
+  // for (int j = 0; j< dictionaryLength; j++)
+  // {
+  //   //prefix
+  //   char *prefix = malloc(256);
+  //   char *postfix = malloc(256);
+  //   sprintf(prefix, "%d", counter);
+  //   strcat( prefix, dictionary[j]);
+	//   checkPassword(dictionary[j], args->numberOfPasswords);
+  //   free(prefix);
+  //   free(postfix);
 
-    //prefix with all less postfixes
-    for(int i = 0; i<=counter; i++){
-    prefix = malloc(256);
-    postfix = malloc(256);
-    sprintf(prefix, "%d", counter);
-    sprintf(postfix, "%d", i);
-    strcat( prefix, line);
-    strcat(prefix, postfix);
-	  checkPassword(prefix, args->passwordsFileName, args->numberOfPasswords);
-    free(prefix);
-    free(postfix);
-    }
+  //   //prefix with all less postfixes
+  //   for(int i = 0; i<=counter; i++){
+  //   prefix = malloc(256);
+  //   postfix = malloc(256);
+  //   sprintf(prefix, "%d", counter);
+  //   sprintf(postfix, "%d", i);
+  //   strcat( prefix, dictionary[j]);
+  //   strcat(prefix, postfix);
+	//   checkPassword(dictionary[j], args->numberOfPasswords);
+  //   free(prefix);
+  //   free(postfix);
+  //   }
 
-    //postfix
-    prefix = malloc(256);
-    postfix = malloc(256);
-    sprintf(postfix, "%d", counter);
-    strcat(line, postfix);
-    checkPassword(line, args->passwordsFileName, args->numberOfPasswords);
-    free(postfix);
+  //   //postfix
+  //   prefix = malloc(256);
+  //   postfix = malloc(256);
+  //   sprintf(postfix, "%d", counter);
+  //   strcat(dictionary[j], postfix);
+  //   checkPassword(dictionary[j], args->numberOfPasswords);
+  //   free(postfix);
 
-    //postfix with all less prefixes
-    for(int i = 0; i<=counter; i++){
-    prefix = malloc(256);
-    postfix = malloc(256);
-    sprintf(postfix, "%d", counter);
-    sprintf(prefix, "%d", i);
-    strcat(prefix, line);
-	  checkPassword(prefix, args->passwordsFileName, args->numberOfPasswords);
-    free(prefix);
-    free(postfix);
-    }
-	}
+  //   //postfix with all less prefixes
+  //   for(int i = 0; i<=counter; i++){
+  //   prefix = malloc(256);
+  //   postfix = malloc(256);
+  //   sprintf(postfix, "%d", counter);
+  //   sprintf(prefix, "%d", i);
+  //   strcat(prefix, dictionary[j]);
+	//   checkPassword(dictionary[j], args->numberOfPasswords);
+  //   free(prefix);
+  //   free(postfix);
+  //   }
+	// }
 
-  counter++;
-  }
-  // Close the file
-  fclose(dictionaryFile);
+  // counter++;
+  // }
   return NULL;
 }
 
