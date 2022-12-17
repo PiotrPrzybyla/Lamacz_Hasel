@@ -66,3 +66,26 @@ void bytes2md5(const char *data, int len, char *md5buf) {
 		snprintf(&(md5buf[i * 2]), 16 * 2, "%02x", md_value[i]);
 	}
 }
+
+void checkPassword( char* password, char* passwordsFileName){
+      char passwordLine[256];
+  char md5[33]; // 32 characters + null terminator
+    removeSpaces(password);
+    
+    strcat(password, "\n");
+    // printf("%s", str);
+	bytes2md5(password, strlen(password), md5);
+
+	FILE *passwordFile = fopen(passwordsFileName, "r");
+
+    while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
+		
+		struct User user;
+		separateStringBySpace(passwordLine, &user);
+       
+		if(compareStrings(md5, user.hashedPassword)){
+			printf("Password for %s is %s\n", user.mail, password);
+      }
+    }
+    fclose(passwordFile);
+}

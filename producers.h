@@ -14,29 +14,12 @@ void oneWord0(char *dictionaryFileName, char *passwordsFileName){
   }
   // Read the file line by line
   char *line = malloc(256);
-  char passwordLine[256];
-  char md5[33]; // 32 characters + null terminator
-
 
 //check without prefixes
     while (fgets(line, sizeof(line), dictionaryFile))
   {
     
-	bytes2md5(line, strlen(line), md5);
-	FILE *passwordFile = fopen(passwordsFileName, "r");
-
-
-    while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
-		
-		struct User user;
-		separateStringBySpace(passwordLine, &user);
-
-		if(strcmp(md5, user.hashedPassword) == 0){
-			printf("Password for %s is %s\n", user.mail, line);
-		}
-}
-	fclose(passwordFile);
-
+	checkPassword(line, passwordsFileName);
 	}
 
 
@@ -53,50 +36,17 @@ void oneWord0(char *dictionaryFileName, char *passwordsFileName){
      //prefix
   
    strcat( str, line);
-    removeSpaces(str);
-    
-    strcat(str, "\n");
-    // printf("%s", str);
-	bytes2md5(str, strlen(str), md5);
+	checkPassword(str, passwordsFileName);
+free(str);
 
-	FILE *passwordFile = fopen(passwordsFileName, "r");
 
-    while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
-		
-		struct User user;
-		separateStringBySpace(passwordLine, &user);
-       
-		if(compareStrings(md5, user.hashedPassword)){
-			printf("Password for %s is %s\n", user.mail, str);
-      }
-    }
-    fclose(passwordFile);
-    free(str);
     //postfix
     str = malloc(1);
     sprintf(str, "%d", counter);
     strcat(line, str);
     
-    removeSpaces(line);
-    strcat(line, "\n");
-
-	bytes2md5(line, strlen(line), md5);
-
-
-	passwordFile = fopen(passwordsFileName, "r");
-
-    while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
-		
-		struct User user;
-		separateStringBySpace(passwordLine, &user);
-       
-		if(compareStrings(md5, user.hashedPassword)){
-			printf("Password for %s is %s\n", user.mail, line);
-      }
-    }
-	free(str);
-  fclose(passwordFile);
- 
+    checkPassword(line, passwordsFileName);
+  free(str);
 	}
      counter++;
      
