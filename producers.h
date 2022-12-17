@@ -8,13 +8,7 @@
 //małe litery
 void *oneWord0(){
  char* line = malloc(256);
-//  pthread_mutex_lock(&mutex);
-//  struct thread_args *args = (struct thread_args *)arg;
-//  pthread_mutex_unlock(&mutex);
-//check without prefixes
-//  pthread_mutex_lock(&mutex);
 
-  //  pthread_mutex_unlock(&mutex);
 //check with numbers
   int counter = 0;
   while(1){
@@ -220,12 +214,10 @@ for(int i=0;i<dictionaryLength; i++){
   return NULL;
 }
 void *consumer(){
-  //  struct thread_args *args = (struct thread_args *)arg;
    pthread_mutex_lock(&mutex);
   while(1){
     pthread_cond_wait(&cond, &mutex);
-    printf("%s\n",newestPassword);
-    free(newestPassword);
+    printf("Password for %s is %s\n",newestMail, newestPassword);
   }
   pthread_mutex_unlock(&mutex);
    

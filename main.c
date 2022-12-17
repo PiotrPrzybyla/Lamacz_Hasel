@@ -23,21 +23,13 @@ int main(int argc, char **argv){
 	char * dictionaryFileName = "tests/test-dict-mini.txt";
 	char* passwordsFileName = "tests/test-data1-local.txt";
 	
-	    
-		// int *numberOfPasswords;
-		// numberOfPasswords = malloc(sizeof(int));
+
 		numberOfPasswords = 0;
-		// args.numberOfPasswords = numberOfPasswords;
 newestPassword = malloc(sizeof(char*));
 	readFromFiles(dictionaryFileName, passwordsFileName);
-	// for(int i = 0; i< (passwordToBreakLength) ; i++){
-	// 	printf("%s\n", passwordsToBreak[i]);
-	// }
+
 	    pthread_mutex_unlock(&mutex);
-	
-	// printf("%s", passwords[0]);
-	
-	// 
+
 	rcC = pthread_create(&threadC, NULL, consumer, NULL);
 	
 	rc1 = pthread_create(&thread1, NULL, oneWord0, NULL);
@@ -49,12 +41,9 @@ newestPassword = malloc(sizeof(char*));
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
 	pthread_join(thread3, NULL);
-	// pthread_cancel(threadC);
+
 	pthread_join(threadC, NULL);
 	
-	// for(int i = 0; i< (*numberOfPasswords) ; i++){
-	// 	printf("%s\n", passwords[i]);
-	// }
 	pthread_mutex_destroy(&mutex);
 	free(passwords);
 	free(dictionary);

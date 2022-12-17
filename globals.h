@@ -10,3 +10,4 @@ int dictionaryLength;
 int passwordToBreakLength;
 int numberOfPasswords;
 char *newestPassword;
+char *newestMail;
