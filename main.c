@@ -26,8 +26,8 @@ int main(int argc, char **argv){
 	int rc1,rc2,rc3,rc4,rcC;
  
  
-	char * dictionaryFileName = "tests/test-dict-mini.txt";
-	char* passwordsFileName = "tests/test-data1.txt";
+	char * dictionaryFileName = "tests/test-dict-large.txt";
+	char* passwordsFileName = "tests/test-data5.txt";
 	
 
 	numberOfPasswords = 0;
@@ -47,11 +47,11 @@ int main(int argc, char **argv){
 	rc2 = pthread_create(&thread2, NULL, oneWord1, NULL);
 	rc3 = pthread_create(&thread3, NULL, oneWord2, NULL);
 	rc4 = pthread_create(&thread4, NULL, twoWords0, NULL);
-	pthread_join(thread4, NULL);
+	
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
 	pthread_join(thread3, NULL);
-	
+	pthread_join(thread4, NULL);
 	pthread_join(threadC, NULL);
 	
 	pthread_mutex_destroy(&mutex1);

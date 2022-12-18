@@ -97,16 +97,16 @@ void checkPassword( char* password, bool withSpaces){
       
 		bytes2md5(password, strlen(password), md5);
        
-        // pthread_mutex_lock(&mutex1);
-		// separateStringBySpace(passwordToBreak, &user);
-        //  pthread_mutex_unlock(&mutex1);
-        // printf("%s\n", passwordsToBreak[k]);
-        // printf("%s\n\n", md5);
-        // pthread_mutex_unlock(&mutex1);
-        // printf("%s\n", passwordToBreak);
 		if(compareStrings(md5, passwordToBreak)){
-            
+            bool alreadyExists = false;
             pthread_mutex_lock(&mutex3);
+            for(int j = 0; j<numberOfPasswords; j++){
+            if(compareStrings(passwords[j], strdup(password))){
+                    alreadyExists = true;
+                }
+           
+            }
+            if(!alreadyExists){
             (numberOfPasswords)++;
 			passwords = realloc(passwords, (numberOfPasswords) * sizeof(char*));
              
@@ -116,7 +116,9 @@ void checkPassword( char* password, bool withSpaces){
             newestPassword = strdup(password);
             newestMail = mails[(numberOfPasswords) -1];
             pthread_cond_signal(&cond);
-             pthread_mutex_unlock(&mutex3);
+            
+            }
+           pthread_mutex_unlock(&mutex3);
            
             
       }
