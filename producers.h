@@ -227,9 +227,6 @@ void *twoWords0(){
       strcpy(secondLine,dictionary[i] );
       strcat(line, " ");
       strcat(line, secondLine);
-      if(i==600 && j ==600){
-        printf("%s", line);
-      }
       checkPassword(line, true);
       free(secondLine);
       free(line);
@@ -242,12 +239,15 @@ void *twoWords0(){
   return NULL;
 }
 void *consumer(){
-   pthread_mutex_lock(&mutex);
+         
+
   while(1){
-    pthread_cond_wait(&cond, &mutex);
+
+    pthread_cond_wait(&cond, &mutex3);
     printf("Password for %s is %s\n",newestMail, newestPassword);
+
   }
-  pthread_mutex_unlock(&mutex);
-   
+        
+
 return NULL;
 }

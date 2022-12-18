@@ -40,11 +40,11 @@ void removeSpaces(char *str)
     str[count] = '\0';
 }
 
-void separateStringBySpace(char* inputt, struct User* user)
+void separateStringBySpace(char* inputt, char** passwordToBreak, char** mailToBreak)
 {
-  // Use strtok to split the input string by space characters
-  char* input = malloc(2048);
-  strncpy(input, inputt, 2048);
+ //Use strtok to split the input string by space characters
+  char* input = malloc(256);
+  strncpy(input, inputt, 256);
   char* token = strtok(input, " ");
   
   int counter = 0;
@@ -54,13 +54,10 @@ void separateStringBySpace(char* inputt, struct User* user)
 	removeSpaces(token);
 
 	if(counter == 1){
-		user->hashedPassword = token;
-	}
-	if(counter == 3){ 
-		user->username = token;
+		*passwordToBreak = token;
 	}
     if(counter == 2){
-		user->mail = token;
+		*mailToBreak = token;
         
 	} 
     // Get the next token
@@ -88,36 +85,38 @@ void checkPassword( char* password, bool withSpaces){
     char md5[33]; // 32 characters + null terminator
     if(!withSpaces){
     removeSpaces(password);
-    printf("%s\n", password);
     } 
     // printf("%s\n", password);
     
     for(int k = 0; k<passwordToBreakLength; k++){
+        char *passwordToBreak = malloc(256);
+        // pthread_mutex_lock(&mutex1);
         
-       
+        
+       strcpy(passwordToBreak,passwordsToBreak[k] );
+      
 		bytes2md5(password, strlen(password), md5);
        
-		struct User user;
-
-        pthread_mutex_lock(&mutex);
-		separateStringBySpace(passwordsToBreak[k], &user);
+        // pthread_mutex_lock(&mutex1);
+		// separateStringBySpace(passwordToBreak, &user);
+        //  pthread_mutex_unlock(&mutex1);
         // printf("%s\n", passwordsToBreak[k]);
         // printf("%s\n\n", md5);
-        pthread_mutex_unlock(&mutex);
-        
-		if(compareStrings(md5, user.hashedPassword)){
+        // pthread_mutex_unlock(&mutex1);
+        // printf("%s\n", passwordToBreak);
+		if(compareStrings(md5, passwordToBreak)){
             
-            pthread_mutex_lock(&mutex);
+            pthread_mutex_lock(&mutex3);
             (numberOfPasswords)++;
 			passwords = realloc(passwords, (numberOfPasswords) * sizeof(char*));
              
             passwords[(numberOfPasswords) -1] = strdup(password);
             mails = realloc(mails, (numberOfPasswords) * sizeof(char*));
-            mails[(numberOfPasswords) -1] = strdup(user.mail);
+            mails[(numberOfPasswords) -1] = strdup(mailsToBreak[k]);
             newestPassword = strdup(password);
             newestMail = mails[(numberOfPasswords) -1];
             pthread_cond_signal(&cond);
-             pthread_mutex_unlock(&mutex);
+             pthread_mutex_unlock(&mutex3);
            
             
       }
@@ -149,7 +148,8 @@ void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
  while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
     passwordToBreakLength++;
     passwordsToBreak = realloc(passwordsToBreak, passwordToBreakLength * sizeof(char*));
-    passwordsToBreak[passwordToBreakLength -1] = strdup(passwordLine);
+    mailsToBreak = realloc(mailsToBreak, passwordToBreakLength * sizeof(char*));
+    separateStringBySpace(passwordLine, &passwordsToBreak[passwordToBreakLength -1], &mailsToBreak[passwordToBreakLength -1]);
    
  }
  fclose(dictionaryFile);
