@@ -1,6 +1,8 @@
 #include <openssl/evp.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
 #include "structs.h"
 #include "globals.h"
 
@@ -15,6 +17,14 @@ int compareStrings(char* str1, char* str2){
         if(str1[i] != str2[i]) return 0;
     }
     return 1;
+}
+void removeNewLine(char *str){
+     int count = 0;
+      for (int i = 0; str[i]; i++)
+        if (str[i]!='\n')
+            str[count++] = str[i]; // here count is
+                                   // incremented
+    str[count] = '\0';
 }
 void removeSpaces(char *str)
 {
@@ -33,8 +43,8 @@ void removeSpaces(char *str)
 void separateStringBySpace(char* inputt, struct User* user)
 {
   // Use strtok to split the input string by space characters
-  char* input = malloc(1024);
-  strncpy(input, inputt, 1024);
+  char* input = malloc(2048);
+  strncpy(input, inputt, 2048);
   char* token = strtok(input, " ");
   
   int counter = 0;
@@ -74,21 +84,30 @@ void bytes2md5(const char *data, int len, char *md5buf) {
 	}
 }
 
-void checkPassword( char* password){
+void checkPassword( char* password, bool withSpaces){
     char md5[33]; // 32 characters + null terminator
+    if(!withSpaces){
     removeSpaces(password);
-
+    printf("%s\n", password);
+    } 
+    // printf("%s\n", password);
+    
     for(int k = 0; k<passwordToBreakLength; k++){
-        pthread_mutex_lock(&mutex);
+        
        
 		bytes2md5(password, strlen(password), md5);
        
 		struct User user;
 
-        
+        pthread_mutex_lock(&mutex);
 		separateStringBySpace(passwordsToBreak[k], &user);
-
+        // printf("%s\n", passwordsToBreak[k]);
+        // printf("%s\n\n", md5);
+        pthread_mutex_unlock(&mutex);
+        
 		if(compareStrings(md5, user.hashedPassword)){
+            
+            pthread_mutex_lock(&mutex);
             (numberOfPasswords)++;
 			passwords = realloc(passwords, (numberOfPasswords) * sizeof(char*));
              
@@ -98,11 +117,11 @@ void checkPassword( char* password){
             newestPassword = strdup(password);
             newestMail = mails[(numberOfPasswords) -1];
             pthread_cond_signal(&cond);
-            
+             pthread_mutex_unlock(&mutex);
            
             
       }
-      pthread_mutex_unlock(&mutex);
+      
     }
    
 }
@@ -116,10 +135,10 @@ void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
     return;
   }
   // Read the file line by line
-  char *line = malloc(32);
+  char *line = malloc(33);
   char passwordLine[256];
 
-  while (fgets(line, sizeof(line), dictionaryFile))
+  while (fgets(line, 2 * sizeof(char*), dictionaryFile))
   { 
     dictionaryLength++;
     dictionary = realloc(dictionary, dictionaryLength * sizeof(char*));

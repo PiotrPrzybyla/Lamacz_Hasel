@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include "utils.h"
 
 //małe litery
@@ -15,7 +16,7 @@ void *oneWord0(){
     if(counter == 0){
   for(int j=0;j<dictionaryLength; j++){
     strcpy(line,dictionary[j] );
-    checkPassword(line);
+    checkPassword(line, false);
 	}
     }
      
@@ -27,7 +28,7 @@ void *oneWord0(){
     char *postfix = malloc(256);
     sprintf(prefix, "%d", counter);
     strcat( prefix, line);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
 
@@ -39,7 +40,7 @@ void *oneWord0(){
     sprintf(postfix, "%d", i);
     strcat( prefix, line);
     strcat(prefix, postfix);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
     }
@@ -49,7 +50,7 @@ void *oneWord0(){
     postfix = malloc(256);
     sprintf(postfix, "%d", counter);
     strcat(line, postfix);
-    checkPassword(line);
+    checkPassword(line, false);
     free(postfix);
 
     //postfix with all less prefixes
@@ -60,7 +61,7 @@ void *oneWord0(){
     sprintf(prefix, "%d", i);
     strcat(prefix, line);
     strcat(prefix, postfix);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
     }
@@ -71,9 +72,8 @@ void *oneWord0(){
   }
   return NULL;
 }
-void *oneWord1(void *arg){
+void *oneWord1(){
   char* line = malloc(256);
- struct thread_args *args = (struct thread_args *)arg;
 //check without prefixes
 
 
@@ -84,7 +84,7 @@ void *oneWord1(void *arg){
       for(int i=0;i<dictionaryLength; i++){
   strcpy(line,dictionary[i] );
     line[0] = toupper(line[0]);
-    checkPassword(line);
+    checkPassword(line, false);
 	}
     }
   for (int j = 0; j< dictionaryLength; j++)
@@ -96,7 +96,7 @@ void *oneWord1(void *arg){
     char *postfix = malloc(256);
     sprintf(prefix, "%d", counter);
     strcat( prefix, line);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
 
@@ -108,7 +108,7 @@ void *oneWord1(void *arg){
     sprintf(postfix, "%d", i);
     strcat( prefix, line);
     strcat(prefix, postfix);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
     }
@@ -118,7 +118,7 @@ void *oneWord1(void *arg){
     postfix = malloc(256);
     sprintf(postfix, "%d", counter);
     strcat(line, postfix);
-    checkPassword(line);
+    checkPassword(line, false);
     free(postfix);
 
     //postfix with all less prefixes
@@ -129,7 +129,7 @@ void *oneWord1(void *arg){
     sprintf(prefix, "%d", i);
     strcat(prefix, line);
     strcat(prefix, postfix);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
     }
@@ -140,9 +140,8 @@ void *oneWord1(void *arg){
   }
   return NULL;
 }
-void *oneWord2(void *arg){
+void *oneWord2(){
   char* line = malloc(256);
- struct thread_args *args = (struct thread_args *)arg;
 //check without prefixes
 
 
@@ -155,7 +154,7 @@ for(int i=0;i<dictionaryLength; i++){
     for(int k = 0; k< strlen(line); k++){
       line[k] = toupper(line[k]);
     }
-    checkPassword(line);
+    checkPassword(line, false);
 	}
     }
   for (int j = 0; j< dictionaryLength; j++)
@@ -169,7 +168,7 @@ for(int i=0;i<dictionaryLength; i++){
     char *postfix = malloc(256);
     sprintf(prefix, "%d", counter);
     strcat( prefix, line);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
 
@@ -181,7 +180,7 @@ for(int i=0;i<dictionaryLength; i++){
     sprintf(postfix, "%d", i);
     strcat( prefix, line);
     strcat(prefix, postfix);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
     }
@@ -191,7 +190,7 @@ for(int i=0;i<dictionaryLength; i++){
     postfix = malloc(256);
     sprintf(postfix, "%d", counter);
     strcat(line, postfix);
-    checkPassword(line);
+    checkPassword(line, false);
     free(postfix);
 
     //postfix with all less prefixes
@@ -202,7 +201,7 @@ for(int i=0;i<dictionaryLength; i++){
     sprintf(prefix, "%d", i);
     strcat(prefix, line);
     strcat(prefix, postfix);
-	  checkPassword(prefix);
+	  checkPassword(prefix, false);
     free(prefix);
     free(postfix);
     }
@@ -211,6 +210,35 @@ for(int i=0;i<dictionaryLength; i++){
 
   counter++;
   }
+  return NULL;
+}
+void *twoWords0(){
+  char* line;
+  char* secondLine;
+//check with numbers
+  
+  for(int j=0;j<dictionaryLength; j++){
+    for(int i=0; i<dictionaryLength; i++){
+      line = malloc(256);
+      secondLine = malloc(256);
+      removeSpaces(line);
+      removeSpaces(secondLine);
+      strcpy(line,dictionary[j] );
+      strcpy(secondLine,dictionary[i] );
+      strcat(line, " ");
+      strcat(line, secondLine);
+      if(i==600 && j ==600){
+        printf("%s", line);
+      }
+      checkPassword(line, true);
+      free(secondLine);
+      free(line);
+    
+      
+	}
+
+    }
+
   return NULL;
 }
 void *consumer(){
