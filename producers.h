@@ -15,6 +15,7 @@ void *oneWord0(){
   while(1){
     if(counter == 0){
   for(int j=0;j<dictionaryLength; j++){
+
     strcpy(line,dictionary[j] );
     checkPassword(line, false);
 	}
@@ -22,6 +23,7 @@ void *oneWord0(){
      
   for (int j = 0; j< dictionaryLength; j++)
   {
+
     strcpy(line,dictionary[j] );
     //prefix
     char *prefix = malloc(256);
@@ -34,6 +36,7 @@ void *oneWord0(){
 
     //prefix with all less postfixes
     for(int i = 0; i<=counter; i++){
+
     prefix = malloc(256);
     postfix = malloc(256);
     sprintf(prefix, "%d", counter);
@@ -55,6 +58,7 @@ void *oneWord0(){
 
     //postfix with all less prefixes
     for(int i = 0; i<=counter; i++){
+
     prefix = malloc(256);
     postfix = malloc(256);
     sprintf(postfix, "%d", counter);
@@ -80,8 +84,10 @@ void *oneWord1(){
 //check with numbers
   int counter = 0;
   while(1){
+
     if(counter == 0){
       for(int i=0;i<dictionaryLength; i++){
+
   strcpy(line,dictionary[i] );
     line[0] = toupper(line[0]);
     checkPassword(line, false);
@@ -89,6 +95,7 @@ void *oneWord1(){
     }
   for (int j = 0; j< dictionaryLength; j++)
   {
+
     strcpy(line,dictionary[j] );
     line[0] = toupper(line[0]);
     //prefix
@@ -102,6 +109,7 @@ void *oneWord1(){
 
     //prefix with all less postfixes
     for(int i = 0; i<=counter; i++){
+
     prefix = malloc(256);
     postfix = malloc(256);
     sprintf(prefix, "%d", counter);
@@ -123,6 +131,7 @@ void *oneWord1(){
 
     //postfix with all less prefixes
     for(int i = 0; i<=counter; i++){
+
     prefix = malloc(256);
     postfix = malloc(256);
     sprintf(postfix, "%d", counter);
@@ -148,10 +157,13 @@ void *oneWord2(){
 //check with numbers
   int counter = 0;
   while(1){
+
     if(counter == 0){
 for(int i=0;i<dictionaryLength; i++){
+
   strcpy(line,dictionary[i] );
     for(int k = 0; k< strlen(line); k++){
+
       line[k] = toupper(line[k]);
     }
     checkPassword(line, false);
@@ -159,6 +171,7 @@ for(int i=0;i<dictionaryLength; i++){
     }
   for (int j = 0; j< dictionaryLength; j++)
   {
+
     strcpy(line,dictionary[j] );
     for(int k = 0; k< strlen(line); k++){
       line[k] = toupper(line[k]);
@@ -174,6 +187,7 @@ for(int i=0;i<dictionaryLength; i++){
 
     //prefix with all less postfixes
     for(int i = 0; i<=counter; i++){
+
     prefix = malloc(256);
     postfix = malloc(256);
     sprintf(prefix, "%d", counter);
@@ -195,6 +209,7 @@ for(int i=0;i<dictionaryLength; i++){
 
     //postfix with all less prefixes
     for(int i = 0; i<=counter; i++){
+
     prefix = malloc(256);
     postfix = malloc(256);
     sprintf(postfix, "%d", counter);
@@ -218,7 +233,9 @@ void *twoWords0(){
 //check with numbers
   
   for(int j=0;j<dictionaryLength; j++){
+
     for(int i=0; i<dictionaryLength; i++){
+
       line = malloc(256);
       secondLine = malloc(256);
       removeSpaces(line);
@@ -245,6 +262,7 @@ void *consumer(){
 
     pthread_cond_wait(&cond, &mutex3);
     printf("Password for %s is %s\n",newestMail, newestPassword);
+    
 
   }
         

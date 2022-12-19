@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <signal.h>
 #include "structs.h"
 #include "globals.h"
 
@@ -89,17 +90,15 @@ void checkPassword( char* password, bool withSpaces){
     // printf("%s\n", password);
     
     for(int k = 0; k<passwordToBreakLength; k++){
-        char *passwordToBreak = malloc(256);
-        // pthread_mutex_lock(&mutex1);
-        
+        char *passwordToBreak = malloc(256);        
         
        strcpy(passwordToBreak,passwordsToBreak[k] );
       
 		bytes2md5(password, strlen(password), md5);
-       
+       pthread_mutex_lock(&mutex3);
 		if(compareStrings(md5, passwordToBreak)){
             bool alreadyExists = false;
-            pthread_mutex_lock(&mutex3);
+            
             for(int j = 0; j<numberOfPasswords; j++){
             if(compareStrings(passwords[j], strdup(password))){
                     alreadyExists = true;
@@ -118,10 +117,11 @@ void checkPassword( char* password, bool withSpaces){
             pthread_cond_signal(&cond);
             
             }
-           pthread_mutex_unlock(&mutex3);
+           
            
             
       }
+      pthread_mutex_unlock(&mutex3);
       
     }
    
@@ -156,4 +156,14 @@ void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
  }
  fclose(dictionaryFile);
  fclose(passwordFile);
+}
+void showAllPasswords(){
+    
+     pthread_mutex_lock(&mutex3);
+     printf("\n All passwords: \n");
+    for(int i = 0; i<numberOfPasswords; i++){
+printf("Password for %s is %s\n",mails[i], passwords[i]);
+    }
+    printf("--------------------------------\n");
+      pthread_mutex_unlock(&mutex3);
 }
