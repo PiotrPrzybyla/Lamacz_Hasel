@@ -126,7 +126,7 @@ void checkPassword( char* password, bool withSpaces){
     }
    
 }
-void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
+void readFromFiles(){
     dictionaryLength = 0;
     passwordToBreakLength = 0;
     
@@ -144,19 +144,24 @@ void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
   { 
     dictionaryLength++;
     dictionary = realloc(dictionary, dictionaryLength * sizeof(char*));
+
     removeSpaces(line);
     dictionary[dictionaryLength -1] = strdup(line);
 }
+   
     FILE *passwordFile = fopen(passwordsFileName, "r");
  while(fgets(passwordLine, sizeof(passwordLine), passwordFile)){
+    
     passwordToBreakLength++;
     passwordsToBreak = realloc(passwordsToBreak, passwordToBreakLength * sizeof(char*));
     mailsToBreak = realloc(mailsToBreak, passwordToBreakLength * sizeof(char*));
     separateStringBySpace(passwordLine, &passwordsToBreak[passwordToBreakLength -1], &mailsToBreak[passwordToBreakLength -1]);
    
  }
+  
  fclose(dictionaryFile);
  fclose(passwordFile);
+
 }
 void showAllPasswords(){
     

@@ -13,6 +13,10 @@ void *oneWord0(){
 //check with numbers
   int counter = 0;
   while(1){
+    if(reset[0] == 1){
+      counter =0;
+      reset[0] = 0;
+    }
     if(counter == 0){
   for(int j=0;j<dictionaryLength; j++){
 
@@ -84,7 +88,10 @@ void *oneWord1(){
 //check with numbers
   int counter = 0;
   while(1){
-
+if(reset[1] == 1){
+      counter =0;
+      reset[1] = 0;
+    }
     if(counter == 0){
       for(int i=0;i<dictionaryLength; i++){
 
@@ -157,7 +164,10 @@ void *oneWord2(){
 //check with numbers
   int counter = 0;
   while(1){
-
+if(reset[2] == 1){
+      counter =0;
+      reset[2] = 0;
+    }
     if(counter == 0){
 for(int i=0;i<dictionaryLength; i++){
 
@@ -231,8 +241,10 @@ void *twoWords0(){
   char* line;
   char* secondLine;
 //check with numbers
-  
-  for(int j=0;j<dictionaryLength; j++){
+int counter = 0;
+  while(1){
+    if(counter == 0){
+ for(int j=0;j<dictionaryLength; j++){
 
     for(int i=0; i<dictionaryLength; i++){
 
@@ -247,11 +259,19 @@ void *twoWords0(){
       checkPassword(line, true);
       free(secondLine);
       free(line);
-    
+    if(reset[2] == 1){
+      reset[2] = 0;
+      counter = 0;
+      break;
+    }
       
 	}
 
     }
+    }
+ counter++;
+  }
+
 
   return NULL;
 }
@@ -259,10 +279,10 @@ void *consumer(){
          
 
   while(1){
-
+pthread_mutex_lock(&mutex3);
     pthread_cond_wait(&cond, &mutex3);
     printf("Password for %s is %s\n",newestMail, newestPassword);
-    
+    pthread_mutex_unlock(&mutex3);
 
   }
         

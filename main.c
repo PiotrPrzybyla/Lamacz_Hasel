@@ -11,35 +11,35 @@
 
 void* changeFile(){
     while(1){
-		free(passwordsFileName);
-		passwordsFileName = malloc(1024);
-		dictionaryFileName = "tests/test-dict-large.txt";
-		scanf("%s", passwordsFileName);
-		printf("%s", dictionaryFileName);
-		pthread_cancel(thread1);
-		pthread_cancel(thread2);
-		pthread_cancel(thread3);
-		pthread_cancel(thread4);
-		pthread_cancel(threadC);
+		
+		char *newFile = malloc(256);
+		scanf("%s", newFile);
+		// printf("%s", newFile);
 		pthread_mutex_lock(&mutex1);
 		pthread_mutex_lock(&mutex2);
 		pthread_mutex_lock(&mutex3);
 		pthread_mutex_lock(&mutex4);
+		
+		
+		free(passwords);
+		free(dictionary);
+		free(newestMail);
+		free(newestPassword);
+		dictionaryLength = 0;
+		passwordToBreakLength = 0;
 		numberOfPasswords = 0;
-		newestPassword = malloc(sizeof(char*));
-		readFromFiles(dictionaryFileName, passwordsFileName);
-
+		passwordsFileName = malloc(256);
+		strcpy(passwordsFileName, newFile);
+		printf("New file: %s \n", passwordsFileName);
+		readFromFiles();
+		for(int i =0; i<4; i++){
+			reset[i] = 1;
+		}
 		pthread_mutex_unlock(&mutex1);
 		pthread_mutex_unlock(&mutex2);
 		pthread_mutex_unlock(&mutex3);
 		pthread_mutex_unlock(&mutex4);
-		rcC = pthread_create(&threadC, NULL, consumer, NULL);
-	
-	rc1 = pthread_create(&thread1, NULL, oneWord0, NULL);
-	
-	rc2 = pthread_create(&thread2, NULL, oneWord1, NULL);
-	rc3 = pthread_create(&thread3, NULL, oneWord2, NULL);
-	rc4 = pthread_create(&thread4, NULL, twoWords0, NULL);
+		
 	}
 }
 void handle_sigint(int sig)
@@ -58,6 +58,9 @@ int main(int argc, char **argv){
 	pthread_mutex_lock(&mutex2);
 	pthread_mutex_lock(&mutex3);
 	pthread_mutex_lock(&mutex4);
+	for(int i =0; i<4; i++){
+			reset[i] = 0;
+		}
 	struct thread_args args;
 	
 	
@@ -65,10 +68,11 @@ int main(int argc, char **argv){
 
  
  
-	char * dictionaryFileName = "tests/test-dict-large.txt";
-	char* passwordsFileName = "tests/test-data5.txt";
-	// dictionaryFileName = "tests/test-dict-mini.txt";
-	// passwordsFileName = "tests/test-data1-local.txt";
+	// char * dictionaryFileName = "tests/test-dict-large.txt";
+	// char* passwordsFileName = "tests/test-data5.txt";
+	passwordsFileName = malloc(256);
+	dictionaryFileName = "tests/test-dict-mini.txt";
+	passwordsFileName = strdup("tests/test-data1-local.txt");
 
 	numberOfPasswords = 0;
 	newestPassword = malloc(sizeof(char*));
@@ -77,21 +81,22 @@ int main(int argc, char **argv){
 	pthread_mutex_unlock(&mutex2);
 	pthread_mutex_unlock(&mutex3);
 	pthread_mutex_unlock(&mutex4);
-	rcC = pthread_create(&threadC, NULL, consumer, NULL);
+	pthread_create(&threadC, NULL, consumer, NULL);
 	
-	rc1 = pthread_create(&thread1, NULL, oneWord0, NULL);
+	pthread_create(&thread1, NULL, oneWord0, NULL);
 	
-	rc2 = pthread_create(&thread2, NULL, oneWord1, NULL);
-	rc3 = pthread_create(&thread3, NULL, oneWord2, NULL);
-	rc4 = pthread_create(&thread4, NULL, twoWords0, NULL);
-	rcF = pthread_create(&threadF, NULL, changeFile, NULL);
+	pthread_create(&thread2, NULL, oneWord1, NULL);
+	pthread_create(&thread3, NULL, oneWord2, NULL);
+	pthread_create(&thread4, NULL, twoWords0, NULL);
+	pthread_create(&threadF, NULL, changeFile, NULL);
  while (1) ;
+ pthread_join(threadF, NULL);
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
 	pthread_join(thread3, NULL);
 	pthread_join(thread4, NULL);
 	pthread_join(threadC, NULL);
-	pthread_join(threadF, NULL);
+	
 
 	pthread_mutex_destroy(&mutex1);
 	pthread_mutex_destroy(&mutex2);
