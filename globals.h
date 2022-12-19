@@ -11,4 +11,8 @@ int passwordToBreakLength;
 int numberOfPasswords;
 char *newestPassword;
 char *newestMail;
-pthread_t thread1, thread2, thread3, thread4, threadC;
+pthread_t thread1, thread2, thread3, thread4, threadF, threadC;
+char * dictionaryFileName;
+char* passwordsFileName;
+	
+	int rc1,rc2,rc3,rc4,rcC, rcF;

@@ -129,6 +129,7 @@ void checkPassword( char* password, bool withSpaces){
 void readFromFiles(char* dictionaryFileName, char* passwordsFileName){
     dictionaryLength = 0;
     passwordToBreakLength = 0;
+    
     FILE *dictionaryFile = fopen(dictionaryFileName, "r");
     if (dictionaryFile == NULL)
   {
@@ -161,7 +162,7 @@ void showAllPasswords(){
     
      pthread_mutex_lock(&mutex3);
      printf("\n All passwords: \n");
-    for(int i = 0; i<numberOfPasswords; i++){
+    for(int i =0; i<numberOfPasswords; i++){
 printf("Password for %s is %s\n",mails[i], passwords[i]);
     }
     printf("--------------------------------\n");
